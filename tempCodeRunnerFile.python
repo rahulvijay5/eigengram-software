@@ -1,0 +1,44 @@
+def solution(nums, k):
+    if not nums or k < 1:
+        return 0
+    
+    n = len(nums)
+    if n == 1:
+        return abs(nums[0] - k)
+        
+    medi = n // 2 if n % 2 != 0 else n // 2 - 1
+    
+    snums = sorted(nums)
+    cmed = snums[medi]
+    
+    if cmed == k:
+        return 0
+    
+    if n % 2 == 0:
+        next_num = snums[medi + 1]
+        
+        if k > cmed:
+            if k >= next_num:
+                return min(abs(next_num - cmed), abs(k - cmed))
+        else:
+            if medi > 0 and k <= snums[medi - 1]:
+                prev_num = snums[medi - 1]
+                return min(abs(cmed - prev_num), abs(cmed - k))
+    
+    res = abs(k - cmed)
+    if k < min(snums) or k > max(snums):
+        min_ops = float('inf')
+        for i in range(n):
+            if i != medi:
+                temp = snums.copy()
+                ops_needed = abs(k - temp[i])
+                temp[i] = k
+                temp.sort()
+                if temp[medi] == k:
+                    min_ops = min(min_ops, ops_needed)
+        if min_ops != float('inf'):
+            res = min(res, min_ops)
+    
+    return res
+
+print(solution([1,3,4,8,9],5))
